@@ -4,7 +4,7 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.project.model.Journalist;
-import com.vaadin.project.service.JournalistService;
+import com.vaadin.project.dao.JournalistDao;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -14,14 +14,14 @@ public class JournalistGridDiv extends Div {
     private Grid.Column<Journalist> secondNameColumn;
     private Grid.Column<Journalist> emailColumn;
 
-    public JournalistGridDiv(JournalistService service) {
+    public JournalistGridDiv(JournalistDao service) {
         addClassName("journalist-grid-div");
         setSizeFull();
         createGrid(service);
         add(grid);
     }
 
-    private void createGrid(JournalistService service) {
+    private void createGrid(JournalistDao service) {
         creatGridComponent(service);
         addColumnsToGrid();
     }
@@ -33,7 +33,7 @@ public class JournalistGridDiv extends Div {
 
     }
 
-    private void creatGridComponent(JournalistService service) {
+    private void creatGridComponent(JournalistDao service) {
         grid = new Grid<>();
         grid.setSelectionMode(Grid.SelectionMode.MULTI);
         grid.addThemeVariants(GridVariant.LUMO_NO_BORDER, GridVariant.LUMO_COLUMN_BORDERS);

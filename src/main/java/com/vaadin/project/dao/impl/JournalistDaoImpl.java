@@ -1,6 +1,6 @@
-package com.vaadin.project.service.impl;
+package com.vaadin.project.dao.impl;
 
-import com.vaadin.project.service.JournalistService;
+import com.vaadin.project.dao.JournalistDao;
 import com.vaadin.project.model.Journalist;
 import com.vaadin.project.repository.JournalistRepository;
 import org.springframework.stereotype.Service;
@@ -8,10 +8,10 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class JournalistServiceImpl implements JournalistService {
+public class JournalistDaoImpl implements JournalistDao {
     private final JournalistRepository repository;
 
-    public JournalistServiceImpl(JournalistRepository repository) {
+    public JournalistDaoImpl(JournalistRepository repository) {
         this.repository = repository;
     }
 

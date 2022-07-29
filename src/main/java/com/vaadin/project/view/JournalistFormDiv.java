@@ -11,7 +11,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
-import com.vaadin.project.service.JournalistService;
+import com.vaadin.project.dao.JournalistDao;
 import com.vaadin.project.view.connector.ConnectGridToForm;
 import com.vaadin.project.model.Journalist;
 
@@ -22,7 +22,7 @@ public class JournalistFormDiv extends Div {
     private Button save = new Button("SAVE");
     private Binder<Journalist> binder = new Binder<>(Journalist.class);
 
-    public JournalistFormDiv(ConnectGridToForm connectGridToForm, JournalistService service) {
+    public JournalistFormDiv(ConnectGridToForm connectGridToForm, JournalistDao service) {
         addClassName("journalist-div");
 
         add(createTitle());
