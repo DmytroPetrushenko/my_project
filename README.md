@@ -10,4 +10,4 @@
 ### Технологии:
 - Front-end - Vaadin;
 - Back-end - Spring (Spring-Boot)
-- База данных - PostgreSQL (MySQL)
+- База данных - PostgreSQL (MySQL), Docker, Flyway
