@@ -1,12 +1,12 @@
 package com.vaadin.project.model;
 
+import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
-import java.util.Objects;
 
 @Entity
 public class Journalist {
@@ -54,10 +54,15 @@ public class Journalist {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Journalist that = (Journalist) o;
-        return firstName.equals(that.firstName) && secondName.equals(that.secondName) && email.equals(that.email);
+        return firstName.equals(that.firstName) && secondName.equals(that.secondName)
+                && email.equals(that.email);
     }
 
     @Override
@@ -67,10 +72,10 @@ public class Journalist {
 
     @Override
     public String toString() {
-        return "Journalist{" +
-                "firstName='" + firstName + '\'' +
-                ", secondName='" + secondName + '\'' +
-                ", email='" + email + '\'' +
-                '}';
+        return "Journalist{"
+                + "firstName='" + firstName + '\''
+                + ", secondName='" + secondName + '\''
+                + ", email='" + email + '\''
+                + '}';
     }
 }

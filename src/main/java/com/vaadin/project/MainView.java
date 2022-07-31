@@ -1,6 +1,5 @@
 package com.vaadin.project;
 
-
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -24,10 +23,11 @@ public class MainView extends VerticalLayout {
     public MainView(@Autowired JournalistDao service) {
 
         JournalistGridDiv grid = new JournalistGridDiv(service);
-        grid.setWidth("80%");
         ConnectGridToForm connectGridToForm = new ConnectGridToFormImpl(grid.getGrid(), service);
         JournalistFormDiv form = new JournalistFormDiv(connectGridToForm, service);
-        form.setWidth("20%");
-        add(new HorizontalLayout(grid, form));
+
+        HorizontalLayout horizontalLayout = new HorizontalLayout(grid, form);
+        horizontalLayout.setSizeFull();
+        add(horizontalLayout);
     }
 }

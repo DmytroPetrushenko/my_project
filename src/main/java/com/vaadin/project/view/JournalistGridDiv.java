@@ -3,8 +3,8 @@ package com.vaadin.project.view;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.project.model.Journalist;
 import com.vaadin.project.dao.JournalistDao;
+import com.vaadin.project.model.Journalist;
 import org.springframework.stereotype.Component;
 
 @Component

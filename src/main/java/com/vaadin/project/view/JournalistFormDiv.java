@@ -12,8 +12,8 @@ import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.project.dao.JournalistDao;
-import com.vaadin.project.view.connector.ConnectGridToForm;
 import com.vaadin.project.model.Journalist;
+import com.vaadin.project.view.connector.ConnectGridToForm;
 
 public class JournalistFormDiv extends Div {
     private TextField firstName = new TextField("First Name");

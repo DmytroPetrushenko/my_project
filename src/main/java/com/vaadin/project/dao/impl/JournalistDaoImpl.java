@@ -3,9 +3,8 @@ package com.vaadin.project.dao.impl;
 import com.vaadin.project.dao.JournalistDao;
 import com.vaadin.project.model.Journalist;
 import com.vaadin.project.repository.JournalistRepository;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
+import org.springframework.stereotype.Service;
 
 @Service
 public class JournalistDaoImpl implements JournalistDao {
