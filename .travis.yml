@@ -2,7 +2,11 @@ name: Java CI
 
 on: [push, pull_request]
 
+
+
 jobs:
+  before_install:
+    - gem install rake
   build:
     runs-on: ubuntu-latest
 
