@@ -1,36 +1,50 @@
 package com.vaadin.project;
 
+import com.vaadin.flow.component.applayout.AppLayout;
+import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.router.Route;
-import com.vaadin.flow.server.PWA;
-import com.vaadin.project.dao.JournalistDao;
-import com.vaadin.project.service.JournalistService;
-import com.vaadin.project.view.JournalistFormDiv;
-import com.vaadin.project.view.JournalistGridDiv;
-import com.vaadin.project.view.JournalistUploadDiv;
-import com.vaadin.project.view.connector.ConnectGridToForm;
-import com.vaadin.project.view.connector.ConnectGridToFormImpl;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.vaadin.flow.router.HighlightConditions;
+import com.vaadin.flow.router.RouterLink;
+import com.vaadin.project.view.page.JournalistEditorView;
+import com.vaadin.project.view.page.JournalistUploadView;
 
-@Route("")
-@PWA(name = "Vaadin Application",
-        shortName = "Vaadin App",
-        description = "This is an example Vaadin application.",
-        enableInstallPrompt = false)
 @CssImport("./styles/shared-styles.css")
 @CssImport(value = "./styles/vaadin-text-field-styles.css", themeFor = "vaadin-text-field")
-public class MainView extends VerticalLayout {
-    public MainView(@Autowired JournalistService journalistService){
-        JournalistGridDiv grid = new JournalistGridDiv(journalistService);
-        ConnectGridToForm connectGridToForm = new ConnectGridToFormImpl(grid.getGrid(), journalistService);
+public class MainView extends AppLayout {
+    public MainView(){
 
-        JournalistFormDiv form = new JournalistFormDiv(connectGridToForm, journalistService);
-        JournalistUploadDiv upload = new JournalistUploadDiv(connectGridToForm, journalistService);
-
-        HorizontalLayout horizontalLayout = new HorizontalLayout(grid, new VerticalLayout(upload, form));
-        horizontalLayout.setSizeFull();
-        add(horizontalLayout);
+        createHeader();
+        createDrawer();
     }
+
+    private void createHeader() {
+        H1 logo = new H1("Email Navigator");
+        HorizontalLayout header = new HorizontalLayout(
+                new DrawerToggle(),
+                logo
+        );
+
+        header.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
+        header.setWidth("100%");
+
+        logo.getStyle()
+                .set("font-size", "var(--lumo-font-size-l)")
+                .set("line-height", "var(--lumo-size-l)")
+                .set("margin", "0 var(--lumo-space-m)");
+
+        addToNavbar(header);
+    }
+
+    private void createDrawer() {
+        RouterLink editorViewLink = new RouterLink("EDITOR", JournalistEditorView.class);
+        RouterLink uploadViewLink = new RouterLink("TO UPLOAD", JournalistUploadView.class);
+        editorViewLink.setHighlightCondition(HighlightConditions.sameLocation());
+        addToDrawer(new VerticalLayout(editorViewLink, uploadViewLink));
+    }
+
+
 }

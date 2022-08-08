@@ -12,4 +12,6 @@ public interface JournalistService {
     List<Journalist> findAll();
 
     Journalist save(Journalist journalist);
+
+    void delete(Journalist journalist);
 }

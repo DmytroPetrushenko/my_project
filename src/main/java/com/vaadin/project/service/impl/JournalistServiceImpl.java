@@ -1,14 +1,15 @@
 package com.vaadin.project.service.impl;
 
-import com.vaadin.project.dao.JournalistDao;
+import com.vaadin.project.model.Address;
 import com.vaadin.project.model.Journalist;
+import com.vaadin.project.repository.AddressRepository;
+import com.vaadin.project.repository.JournalistRepository;
 import com.vaadin.project.service.JournalistService;
+import com.vaadin.project.util.FieldsEnum;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
-
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -17,37 +18,25 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class JournalistServiceImpl implements JournalistService {
-    public static final Integer FIRST_NAME = 0;
-    public static final Integer SECOND_NAME = 1;
-    public static final Integer EMAIL = 2;
 
-    private final JournalistDao journalistDao;
+    private final JournalistRepository journalistRepository;
+    private final AddressRepository addressRepository;
 
-    public JournalistServiceImpl(JournalistDao journalistDao) {
-        this.journalistDao = journalistDao;
+    public JournalistServiceImpl(JournalistRepository journalistRepository,
+                                 AddressRepository addressRepository) {
+        this.journalistRepository = journalistRepository;
+        this.addressRepository = addressRepository;
     }
 
     @Override
     public void parseToJdbc(InputStream inputStream) {
         try (XSSFWorkbook workbook = new XSSFWorkbook(inputStream)) {
-            boolean flag;
             for (Sheet sheet : workbook) {
-                flag = false;
                 Iterator<Row> rowIterator = sheet.iterator();
+                rowIterator.next();
                 while (rowIterator.hasNext()) {
-                    Optional<Journalist> optional = validAndSave(rowIterator.next());
-                    if (optional.isEmpty()) {
-                        break;
-                    };
-                    Journalist journalist = optional.get();
-                    if (!flag) {
-                        if (journalist.getFirstName().equals("firstName")
-                                && journalist.getSecondName().equals("secondName")) {
-                            flag = true;
-                            continue;
-                        }
-                    }
-                    journalistDao.save(journalist);
+                    Journalist journalist = validAndSave(rowIterator.next());
+                    save(journalist);
                 }
             }
         } catch (IOException e) {
@@ -57,47 +46,95 @@ public class JournalistServiceImpl implements JournalistService {
 
     @Override
     public List<Journalist> findAll() {
-        return journalistDao.findAll();
+        return journalistRepository.findAll();
     }
 
     @Override
     public Journalist save(Journalist journalist) {
-        return journalistDao.save(journalist);
+        journalist.setAddress(addressRepository.save(journalist.getAddress()));
+        return journalistRepository.save(journalist);
     }
 
-    private Optional<Journalist> validAndSave(Row cells) {
-        int firstCellNum = cells.getFirstCellNum();
-        int lastCellNum = cells.getLastCellNum();
+    @Override
+    public void delete(Journalist journalist) {
+        journalistRepository.delete(journalist);
+    }
 
+    private Journalist validAndSave(Row cells) {
+        int count = 0;
         Journalist journalist = new Journalist();
+        Address address = new Address();
+        journalist.setAddress(address);
 
-        for (int i = firstCellNum; i < lastCellNum; i++) {
-            Cell cell = cells.getCell(i);
-            switch (i) {
-                case 0:
-                    if (cell == null) {
-                        journalist.setFirstName(null);
-                    } else {
-                        journalist.setFirstName(cell.getStringCellValue());
-                    }
+        for (FieldsEnum fieldsEnum : FieldsEnum.values()) {
+            Cell cell = cells.getCell(count);
+            count++;
+            switch (fieldsEnum) {
+                case firstName:
+                    journalist.setFirstName(checkCell(cell));
                     break;
-                case 1:
-                    if (cell == null) {
-                        journalist.setSecondName(null);
-                    } else {
-                        journalist.setSecondName(cell.getStringCellValue());
-                    }
+                case lastName:
+                    journalist.setLastName(checkCell(cell));
                     break;
-                case 2:
-                    if (cell == null) {
-                        journalist.setEmail(null);
-                    } else {
-                        journalist.setEmail(cell.getStringCellValue());
-                    }
+                case title:
+                    journalist.setTitle(checkCell(cell));
+                case mediaOutlets:
+                    journalist.setMediaOutlets(checkCell(cell));
+                    break;
+                case emailAddress:
+                    journalist.setEmailAddress(checkCell(cell));
+                    break;
+                case twitterName:
+                    journalist.setTwitterName(checkCell(cell));
+                    break;
+                case twitterUrl:
+                    journalist.setTwitterUrl(checkCell(cell));
+                    break;
+                case linkedInUrl:
+                    journalist.setLinkedInUrl(checkCell(cell));
+                    break;
+                case facebookUrl:
+                    journalist.setFacebookUrl(checkCell(cell));
+                    break;
+                case instagramUrl:
+                    journalist.setInstagramUrl(checkCell(cell));
+                    break;
+                case mediaOutletAddress:
+                    address.setMediaOutletAddress(checkCell(cell));
+                    break;
+                case address2:
+                    address.setAddress2(checkCell(cell));
+                    break;
+                case city:
+                    address.setCity(checkCell(cell));
+                    break;
+                case state:
+                    address.setState(checkCell(cell));
+                    break;
+                case country:
+                    address.setCountry(checkCell(cell));
+                    break;
+                case zipCode:
+                    address.setZipCode(checkCell(cell));
+                    break;
+                case mediaOutletPhoneNumber:
+                    journalist.setMediaOutletPhoneNumber(checkCell(cell));
                     break;
             }
-
         }
-        return Optional.ofNullable(journalist);
+        return journalist;
+    }
+
+    private String checkCell(Cell cell) {
+        switch (cell.getCellType()) {
+            case STRING:
+                return cell.getStringCellValue();
+            case NUMERIC:
+                return String.valueOf(cell.getNumericCellValue());
+            case FORMULA:
+                return cell.getCellFormula();
+            default:
+                return "";
+        }
     }
 }
