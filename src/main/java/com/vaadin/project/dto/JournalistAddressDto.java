@@ -1,17 +1,9 @@
-package com.vaadin.project.model;
+package com.vaadin.project.dto;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
 import lombok.Data;
 
-@Entity
 @Data
-public class Journalist {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class JournalistAddressDto {
     private Long id;
     private String firstName;
     private String lastName;
@@ -24,6 +16,11 @@ public class Journalist {
     private String facebookUrl;
     private String instagramUrl;
     private String mediaOutletPhoneNumber;
-    @OneToOne
-    private Address address;
+    private Long addressId;
+    private String mediaOutletAddress;
+    private String address2;
+    private String city;
+    private String state;
+    private String country;
+    private String zipCode;
 }
